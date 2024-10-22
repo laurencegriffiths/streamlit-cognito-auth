@@ -263,14 +263,15 @@ class CognitoAuthenticatorBase(ABC):
     def _set_state_login(self, credentials: Credentials) -> bool:
         try:
             claims, user = verify_access_token(
-                self.pool_id,
-                self.app_client_id,
-                self.pool_region,
-                credentials.access_token
+                pool_id=self.pool_id,
+                app_client_id=self.app_client_id,
+                region=self.pool_region,
+                access_token=credentials.access_token,
+                refresh_token=credentials.refresh_token,
             )
         except TokenVerificationException as exc:
             logger.exception(exc)
-            claims = None
+            claims = None          
         if claims:
             self.session_manager.set_credentials(credentials=credentials)
             try:
