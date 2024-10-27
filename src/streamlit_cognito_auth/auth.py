@@ -184,11 +184,14 @@ class CognitoAuthCookieManager(CognitoAuthCookieManagerBase):
         self.cookie_manager = stx.CookieManager()
 
     def set_credentials(self, credentials: Credentials) -> None:
-        self.cookie_manager.set("id_token", credentials.id_token, key="set_id_token")
-        self.cookie_manager.set("access_token", credentials.access_token, key="set_access_token")
-        self.cookie_manager.set("refresh_token", credentials.refresh_token, key="set_refresh_token")
-        self.cookie_manager.set("expires_in", credentials.expires_in, key="set_expires_in")
-        self.cookie_manager.set("token_type", credentials.token_type, key="set_token_type")
+        cookie_values = {
+            "id_token": credentials.id_token,
+            "access_token": credentials.access_token,
+            "refresh_token": credentials.refresh_token,
+            "expires_in": credentials.expires_in,
+            "token_type": credentials.token_type,
+        }
+        self.cookie_manager.batch_set(cookie_values)        
 
     def load_credentials(self) -> Optional[Credentials]:
         cookies = self.cookie_manager.get_all("load_credentials_get_all")
