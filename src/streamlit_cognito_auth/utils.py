@@ -14,9 +14,7 @@ def verify_access_token(pool_id, app_client_id, region, access_token,refresh_tok
     u = Cognito(pool_id, app_client_id, user_pool_region=region,refresh_token=refresh_token)
     try:
         if refresh_token:
-            logger.info(f"old access token {access_token}")
             u.renew_access_token()
-            logger.info(f"Renewed access token: {u.access_token}")
         claims = u.verify_token(u.access_token, "access_token", "access")
         user = u.get_user()
         return claims, user
